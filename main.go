@@ -1,9 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 	"net/http"
 	"ratelimiter/config"
+	"ratelimiter/controllers"
+	"ratelimiter/models"
 	"ratelimiter/routes"
 	_ "ratelimiter/routes"
 
@@ -26,6 +31,15 @@ func RateLimiter() gin.HandlerFunc {
 }
 
 func main() {
+
+	var err error
+	config.GormDB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		fmt.Println("error", err)
+	}
+	defer config.DB.Close()
+	config.GormDB.AutoMigrate(&models.Charge{})
+
 	config.ConnectDatabase()
 	r := gin.Default()
 	gin.SetMode(gin.DebugMode)
@@ -36,6 +50,9 @@ func main() {
 			"message": "pong",
 		})
 	})
-
+	g1 := r.Group("/stripe")
+	{
+		g1.POST("payment", controllers.Payment)
+	}
 	r.Run(":8081") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
