@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 	"net/http"
+	"ratelimiter/chains"
 	"ratelimiter/config"
 	"ratelimiter/controllers"
-	"ratelimiter/models"
 	"ratelimiter/routes"
 	_ "ratelimiter/routes"
 
@@ -32,13 +29,13 @@ func RateLimiter() gin.HandlerFunc {
 
 func main() {
 
-	var err error
-	config.GormDB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		fmt.Println("error", err)
-	}
-	defer config.DB.Close()
-	config.GormDB.AutoMigrate(&models.Charge{})
+	//var err error
+	//config.GormDB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	//if err != nil {
+	//	fmt.Println("error", err)
+	//}
+	//defer config.DB.Close()
+	//config.GormDB.AutoMigrate(&models.Charge{})
 
 	config.ConnectDatabase()
 	r := gin.Default()
@@ -54,5 +51,28 @@ func main() {
 	{
 		g1.POST("payment", controllers.Payment)
 	}
+
+	//run chains
+	initialValue := &chains.InitialValues{}
+
+	cashier := &chains.Cashier{}
+	cashier.SetNext(initialValue)
+
+	//Set next for medical department
+	medical := &chains.Medical{}
+	medical.SetNext(cashier)
+
+	//Set next for doctor department
+	doctor := &chains.Doctor{}
+	doctor.SetNext(medical)
+
+	//Set next for reception department
+	reception := &chains.Reception{}
+	reception.SetNext(doctor)
+
+	request := &chains.Request{Name: "test"}
+	reception.Execute(request)
+
 	r.Run(":8081") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
 }
