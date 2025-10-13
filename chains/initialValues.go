@@ -2,6 +2,7 @@ package chains
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"ratelimiter/controllers"
 	"ratelimiter/util"
 	"time"
@@ -12,9 +13,9 @@ type InitialValues struct {
 }
 
 func (c *InitialValues) Execute(r *Request) {
-	fmt.Println("process request")
+	logrus.Info("process request")
 	if r.Status == Pending {
-		fmt.Println("process started")
+		logrus.Info("process started")
 	}
 
 	date := "2025-10-13"
@@ -28,17 +29,23 @@ func (c *InitialValues) Execute(r *Request) {
 		parseDate, err := util.ParseDate(date)
 		if err == nil {
 			compare := parseDate.Compare(now)
-			fmt.Println("now:", now)
-			fmt.Println("date compare ", compare, "fundId:", fundId, "isFirstDate:", isFirstDate)
+			logrus.WithFields(logrus.Fields{
+				"now":         now,
+				"compare":     compare,
+				"fundId":      fundId,
+				"isFirstDate": isFirstDate,
+			}).Info()
 		} else {
-			fmt.Println("date compare err")
+			logrus.Error("date compare err")
 		}
 	}
 
 	if hasNavInSpecificDay(yesterday) {
-		fmt.Println("has nav in yesterday")
+		logrus.Error("has nav in yesterday")
 	} else if hasNavInSpecificDay(now) {
-		fmt.Println("has nav in today")
+		logrus.Error("has nav in today")
+	} else {
+		logrus.Warn("err")
 	}
 
 }
@@ -47,18 +54,24 @@ func hasNavInSpecificDay(calcDate time.Time) bool {
 	query := fmt.Sprintf("select count(*) from nav n where n.calcDate = %s and light = 1", calcDate.Format("2006-01-02"))
 	result, err := controllers.GetNAVs(query)
 	if err != nil {
-		fmt.Println("err nav count ", err)
+		logrus.WithFields(logrus.Fields{
+			"err nav count": err,
+		}).Warn()
 		return false
 	}
 
 	var count int
 	err = result.Scan(&count)
 	if err != nil {
-		fmt.Println("err nav count ", err)
+		logrus.WithFields(logrus.Fields{
+			"err nav count": err,
+		}).Warn()
 		return false
 	}
 
-	fmt.Println("nav count ", count)
+	logrus.WithFields(logrus.Fields{
+		"nav count": count,
+	}).Info()
 	return count > 0
 }
 

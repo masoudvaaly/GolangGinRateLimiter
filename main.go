@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"ratelimiter/chains"
 	"ratelimiter/config"
@@ -29,6 +30,9 @@ func RateLimiter() gin.HandlerFunc {
 
 func main() {
 
+	logrus.WithFields(logrus.Fields{
+		"animal": "walrus",
+	}).Info("A walrus appears")
 	//var err error
 	//config.GormDB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	//if err != nil {

@@ -6,9 +6,10 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/gorm v1.9.16
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stripe/stripe-go v70.15.0+incompatible
 	golang.org/x/time v0.13.0
-	gorm.io/driver/sqlite v1.6.0
+	gorm.io/gorm v1.30.0
 	modernc.org/sqlite v1.39.0
 )
 
@@ -53,7 +54,6 @@ require (
 	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/tools v0.37.0 // indirect
 	google.golang.org/protobuf v1.36.9 // indirect
-	gorm.io/gorm v1.30.0 // indirect
 	modernc.org/libc v1.66.3 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
