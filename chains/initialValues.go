@@ -2,6 +2,7 @@ package chains
 
 import (
 	"fmt"
+	"ratelimiter/controllers"
 	"ratelimiter/util"
 	"time"
 )
@@ -21,7 +22,7 @@ func (c *InitialValues) Execute(r *Request) {
 	fundId := 1
 	isFirstDate := false
 	now := time.Now()
-	//yesterday := now.Add(-24 * time.Hour)
+	yesterday := now.Add(-24 * time.Hour)
 
 	if SEMAT_CHECK {
 		parseDate, err := util.ParseDate(date)
@@ -32,6 +33,16 @@ func (c *InitialValues) Execute(r *Request) {
 		} else {
 			fmt.Println("date compare err")
 		}
+	}
+
+	hasPreviousDayNAV(yesterday)
+}
+
+func hasPreviousDayNAV(calcDate time.Time) {
+	query := fmt.Sprintf("select count(*) from nav n where n.calcDate = %s and light = 1", calcDate.Format("YYYY/MM/DD"))
+	_, err := controllers.GetNAVs(query)
+	if err != nil {
+
 	}
 }
 
