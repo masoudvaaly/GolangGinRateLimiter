@@ -35,15 +35,28 @@ func (c *InitialValues) Execute(r *Request) {
 		}
 	}
 
-	hasPreviousDayNAV(yesterday)
+	if hasNavInSpecificDay(yesterday) {
+		fmt.Println("has nav in yesterday")
+	} else if hasNavInSpecificDay(now) {
+		fmt.Println("has nav in today")
+	}
+
 }
 
-func hasPreviousDayNAV(calcDate time.Time) {
+func hasNavInSpecificDay(calcDate time.Time) bool {
 	query := fmt.Sprintf("select count(*) from nav n where n.calcDate = %s and light = 1", calcDate.Format("YYYY/MM/DD"))
-	_, err := controllers.GetNAVs(query)
+	result, err := controllers.GetNAVs(query)
 	if err != nil {
-
+		return false
 	}
+
+	var count int
+	err = result.Scan(&count)
+	if err != nil {
+		return false
+	}
+
+	return count > 0
 }
 
 func (c *InitialValues) SetNext(next Department) {
