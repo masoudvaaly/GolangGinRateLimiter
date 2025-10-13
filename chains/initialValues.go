@@ -44,18 +44,21 @@ func (c *InitialValues) Execute(r *Request) {
 }
 
 func hasNavInSpecificDay(calcDate time.Time) bool {
-	query := fmt.Sprintf("select count(*) from nav n where n.calcDate = %s and light = 1", calcDate.Format("YYYY/MM/DD"))
+	query := fmt.Sprintf("select count(*) from nav n where n.calcDate = %s and light = 1", calcDate.Format("2006-01-02"))
 	result, err := controllers.GetNAVs(query)
 	if err != nil {
+		fmt.Println("err nav count ", err)
 		return false
 	}
 
 	var count int
 	err = result.Scan(&count)
 	if err != nil {
+		fmt.Println("err nav count ", err)
 		return false
 	}
 
+	fmt.Println("nav count ", count)
 	return count > 0
 }
 
