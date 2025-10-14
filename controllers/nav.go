@@ -3,17 +3,22 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"ratelimiter/config"
 )
 
 func GetNAVs(query string) (*sql.Rows, error) {
-	fmt.Println("nav query ", query)
+	logrus.WithFields(logrus.Fields{
+		"nav query": query,
+	}).Info()
 	rows, err := config.DB.Query(query)
 	if err != nil {
 		return rows, fmt.Errorf("failed %w", err)
 	}
-	//defer rows.Close()
+	defer rows.Close()
 
-	fmt.Println("nav rows %s", rows)
+	logrus.WithFields(logrus.Fields{
+		"nav rows": rows,
+	}).Info()
 	return rows, nil
 }

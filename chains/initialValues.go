@@ -48,6 +48,27 @@ func (c *InitialValues) Execute(r *Request) {
 		logrus.Warn("err")
 	}
 
+	//
+	if !isInFiscalYear(now) {
+		logrus.Error("not in current year")
+	}
+
+}
+
+func isInFiscalYear(now time.Time) bool {
+	fiscalYear, err := controllers.GetCurrentFiscalYear()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"fiscal year error ": err,
+		}).Warn()
+		return false
+	}
+
+	logrus.WithFields(logrus.Fields{
+		"fiscalYear": fiscalYear.YearName + "-" + fiscalYear.StartDate.String() + "-" + fiscalYear.EndDate.String(),
+	}).Info()
+
+	return now.Compare(fiscalYear.StartDate) < 0 || now.Compare(fiscalYear.EndDate) > 0
 }
 
 func hasNavInSpecificDay(calcDate time.Time) bool {
