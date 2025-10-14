@@ -53,6 +53,10 @@ func (c *InitialValues) Execute(r *Request) {
 		logrus.Error("not in current year")
 	}
 
+	vouchers, _ := controllers.GetVouchersByType(controllers.OPENING_YEAR)
+	if len(vouchers) < 0 {
+		logrus.Error("opening voucher not found")
+	}
 }
 
 func isInFiscalYear(now time.Time) bool {
