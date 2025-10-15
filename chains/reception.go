@@ -1,6 +1,8 @@
 package chains
 
-import "fmt"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 type Reception struct {
 	next Department
@@ -8,11 +10,11 @@ type Reception struct {
 
 func (r *Reception) Execute(p *Request) {
 	if p.registrationDone {
-		fmt.Println("Patient registration already done")
+		logrus.Info("Patient registration already done")
 		r.next.Execute(p)
 		return
 	}
-	fmt.Println("Reception registering patient")
+	logrus.Info("Reception registering patient")
 	p.registrationDone = true
 	r.next.Execute(p)
 }

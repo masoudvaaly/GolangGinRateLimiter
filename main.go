@@ -57,10 +57,13 @@ func main() {
 	}
 
 	//run chains
-	initialValue := &chains.InitialValues{}
+	subOrdinateRemover := &chains.SubordinateRemover{}
+
+	preControl := &chains.PreControls{}
+	preControl.SetNext(subOrdinateRemover)
 
 	cashier := &chains.Cashier{}
-	cashier.SetNext(initialValue)
+	cashier.SetNext(preControl)
 
 	//Set next for medical department
 	medical := &chains.Medical{}

@@ -1,6 +1,8 @@
 package chains
 
-import "fmt"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 type Cashier struct {
 	next Department
@@ -8,9 +10,9 @@ type Cashier struct {
 
 func (c *Cashier) Execute(p *Request) {
 	if p.paymentDone {
-		fmt.Println("Payment Done")
+		logrus.Info("Payment Done")
 	}
-	fmt.Println("Cashier getting money from patient patient")
+	logrus.Info("Cashier getting money from patient patient")
 	c.next.Execute(p)
 }
 

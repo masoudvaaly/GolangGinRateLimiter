@@ -8,15 +8,12 @@ import (
 	"time"
 )
 
-type InitialValues struct {
+type PreControls struct {
 	next Department
 }
 
-func (c *InitialValues) Execute(r *Request) {
-	logrus.Info("process request")
-	if r.Status == Pending {
-		logrus.Info("process started")
-	}
+func (c *PreControls) Execute(r *Request) {
+	logrus.Info("PreControls started")
 
 	date := "2025-10-13"
 
@@ -57,6 +54,8 @@ func (c *InitialValues) Execute(r *Request) {
 	if len(vouchers) < 0 {
 		logrus.Error("opening voucher not found")
 	}
+
+	c.next.Execute(r)
 }
 
 func isInFiscalYear(now time.Time) bool {
@@ -100,6 +99,6 @@ func hasNavInSpecificDay(calcDate time.Time) bool {
 	return count > 0
 }
 
-func (c *InitialValues) SetNext(next Department) {
+func (c *PreControls) SetNext(next Department) {
 	c.next = next
 }

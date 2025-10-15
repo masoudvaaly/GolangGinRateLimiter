@@ -1,6 +1,8 @@
 package chains
 
-import "fmt"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 type Doctor struct {
 	next Department
@@ -8,11 +10,11 @@ type Doctor struct {
 
 func (d *Doctor) Execute(p *Request) {
 	if p.doctorCheckUpDone {
-		fmt.Println("Doctor checkup already done")
+		logrus.Info("Doctor checkup already done")
 		d.next.Execute(p)
 		return
 	}
-	fmt.Println("Doctor checking patient")
+	logrus.Info("Doctor checking patient")
 	p.doctorCheckUpDone = true
 	d.next.Execute(p)
 }
