@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"ratelimiter/chains"
 	"ratelimiter/config"
 	"ratelimiter/controllers"
 	"ratelimiter/routes"
 	_ "ratelimiter/routes"
+
+	"github.com/gin-gonic/gin"
 
 	"golang.org/x/time/rate"
 )
@@ -29,10 +29,6 @@ func RateLimiter() gin.HandlerFunc {
 }
 
 func main() {
-
-	logrus.WithFields(logrus.Fields{
-		"animal": "walrus",
-	}).Info("A walrus appears")
 	//var err error
 	//config.GormDB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	//if err != nil {
@@ -80,6 +76,6 @@ func main() {
 	request := &chains.Request{Name: "test"}
 	reception.Execute(request)
 
-	r.Run(":8081") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":8082") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
 }

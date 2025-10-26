@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"ratelimiter/config"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type FiscalYear struct {
@@ -16,7 +17,7 @@ type FiscalYear struct {
 }
 
 func GetCurrentFiscalYear() (FiscalYear, error) {
-	query := "select * from FiscalYear where isActive = true"
+	query := "select * from FiscalYear where is_active = true"
 	logrus.WithFields(logrus.Fields{
 		"fiscal year query": query,
 	}).Info()
@@ -27,12 +28,23 @@ func GetCurrentFiscalYear() (FiscalYear, error) {
 	}
 
 	defer rows.Close()
-	err = rows.Scan(&fy)
-	if err != nil {
-		return fy, err
+
+	for rows.Next() {
+		var id int
+		var name string
+		if err := rows.Scan(&fy); err != nil {
+			logrus.WithFields(logrus.Fields{
+				"fiscal year Scan error": rows,
+			}).Error()
+		}
+		fmt.Println(id, name)
 	}
-	logrus.WithFields(logrus.Fields{
-		"fiscal year": rows,
-	}).Info()
+
+	if err := rows.Err(); err != nil {
+		logrus.WithFields(logrus.Fields{
+			"fiscal year error": rows,
+		}).Error()
+	}
+
 	return fy, nil
 }

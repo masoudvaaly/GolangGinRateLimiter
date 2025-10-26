@@ -2,6 +2,8 @@ package config
 
 import (
 	"database/sql"
+
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	_ "modernc.org/sqlite"
 )
@@ -36,6 +38,7 @@ func ConnectDatabase() error {
 		return err
 	}
 
+	logrus.Info("DB connected")
 	DB = db
 	return nil
 }

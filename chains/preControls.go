@@ -2,10 +2,11 @@ package chains
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"ratelimiter/controllers"
 	"ratelimiter/util"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type PreControls struct {

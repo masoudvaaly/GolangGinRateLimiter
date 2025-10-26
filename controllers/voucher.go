@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"ratelimiter/config"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type voucherTypeEnum int
@@ -23,7 +24,7 @@ type Voucher struct {
 }
 
 func GetVouchersByType(voucherType voucherTypeEnum) ([]Voucher, error) {
-	query := "select * from FiscalYear where isActive = true"
+	query := "select * from Vouchers where is_active = true"
 	logrus.WithFields(logrus.Fields{
 		"fiscal year query": query,
 	}).Info()
